@@ -81,6 +81,7 @@ section.letters-container {
   margin-bottom: 30px;
 }
 
+
 section.letters-container span {
   font-size: 1.5rem;
   background-color: #323232;
@@ -91,6 +92,10 @@ section.letters-container span {
 section.letters-container span p {
   width: 40px;
   height: 40px;
+}
+
+section.letters-container span p.hidden {
+  color: transparent;
 }
 
 section.keyboard-container {
@@ -112,6 +117,14 @@ section.keyboard-container button {
   border-radius: 3px;
   border: 1px solid #D7D7D7;
   cursor: pointer;
+}
+
+section.keyboard-container button.letter-exist {
+  background-color: #10A95B;
+}
+
+section.keyboard-container button.no-letter-exist {
+  background-color: #EC5D49;
 }
 
 button.new-game {

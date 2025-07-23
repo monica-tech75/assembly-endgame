@@ -6,9 +6,11 @@ import './App.css';
 import { languages } from '../src/languajes';
 
 function App() {
-  const [currentWord, setCurrentWord] = useState('javascript');
+  const [currentWord, setCurrentWord] = useState('react');
+  const [tappedLetter, setTappedLetter] = useState([]);
+
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-  const wordArray = currentWord.toLocaleUpperCase().split('');
+  const wordArray = currentWord.toUpperCase().split('');
   const letterElement = wordArray.map((letter, index) => (
     <span
       className='letters'
@@ -25,9 +27,33 @@ function App() {
     </span>
   ));
 
-  const keyboard = alphabet
-    .split('')
-    .map((letter) => <button key={letter}>{letter.toUpperCase()}</button>);
+  function keepLetter(letter) {
+    setTappedLetter((prevArray) =>
+      prevArray.includes(letter) ? prevArray : [...prevArray, letter]
+    );
+  }
+
+  console.log(tappedLetter);
+
+  const keyboard = alphabet.split('').map((letter) => {
+    const isTapped = tappedLetter.includes(letter);
+    const isInWord = currentWord.toUpperCase().includes(letter.toUpperCase());
+    let buttonClass = '';
+    if (isTapped) {
+      buttonClass = isInWord ? 'letter-exist' : 'no-letter-exist';
+    }
+
+    return (
+      <button
+        className={buttonClass}
+        value={letter}
+        onClick={() => keepLetter(letter)}
+        key={letter}>
+        {letter.toUpperCase()}
+      </button>
+    );
+  });
+
   return (
     <>
       <main>
