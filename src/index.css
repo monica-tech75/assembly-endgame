@@ -58,7 +58,7 @@ section.status-container p {
   font-size: 1rem;
 }
 
-section.languajes-container {
+section.languages-container {
   max-width: 450px;
   margin: 30px auto;
   display: flex;
@@ -67,11 +67,26 @@ section.languajes-container {
   flex-wrap: wrap;
 }
 
-section.languajes-container span {
+section.languages-container span {
   padding: 8px;
   border-radius: 5px;
   font-family: "Hanken Grotesk", Arial, sans-serif;
   font-weight: bold;
+  position: relative;
+}
+
+section.languages-container span.chip.lost::before {
+  content: "💀";
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-size: 0.85rem;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 section.letters-container {
@@ -82,20 +97,15 @@ section.letters-container {
 }
 
 
+
+
 section.letters-container span {
   font-size: 1.5rem;
   background-color: #323232;
   color: #F9F4DA;
   border-bottom: 2px solid #F9F4DA;
-}
-
-section.letters-container span p {
   width: 40px;
   height: 40px;
-}
-
-section.letters-container span p.hidden {
-  color: transparent;
 }
 
 section.keyboard-container {

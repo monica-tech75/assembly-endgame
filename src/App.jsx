@@ -6,34 +6,52 @@ import './App.css';
 import { languages } from '../src/languajes';
 
 function App() {
+  // States Values
   const [currentWord, setCurrentWord] = useState('react');
   const [tappedLetter, setTappedLetter] = useState([]);
-
+  console.log('Current word', currentWord);
+  console.log('Tapped letters', tappedLetter);
+  // Static Values
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-  const wordArray = currentWord.toUpperCase().split('');
-  const letterElement = wordArray.map((letter, index) => (
-    <span
-      className='letters'
-      key={index}>
-      <p>{letter}</p>
-    </span>
-  ));
+  // Derived vales
+  /* let counter = 0;
+  tappedLetter.map((letter) => {
+    currentWord.includes(letter) ? counter : counter++;
+  });
+  console.log(counter); */
 
-  const languajesElements = languages.map((lang) => (
-    <span
-      key={lang.name}
-      style={{ backgroundColor: lang.backgroundColor, color: lang.color }}>
-      {lang.name}
-    </span>
-  ));
+  const wrongGuessCounter = tappedLetter.filter(
+    (letter) => !currentWord.includes(letter)
+  ).length;
+  console.log('Counter wrong letters', wrongGuessCounter);
+
+  const letterElement = currentWord.split('').map((letter, index) => {
+    return (
+      <span
+        className='letters'
+        key={index}>
+        {tappedLetter.includes(letter) ? letter.toUpperCase() : ''}
+      </span>
+    );
+  });
+
+  const languagesElements = languages.map((lang, index) => {
+    const isLanguageLost = index < wrongGuessCounter;
+    return (
+      <span
+        className={`chip ${isLanguageLost ? 'lost' : ''}`}
+        key={lang.name}
+        style={{ backgroundColor: lang.backgroundColor, color: lang.color }}>
+        {lang.name}
+      </span>
+    );
+  });
 
   function keepLetter(letter) {
     setTappedLetter((prevArray) =>
       prevArray.includes(letter) ? prevArray : [...prevArray, letter]
     );
   }
-
-  console.log(tappedLetter);
 
   const keyboard = alphabet.split('').map((letter) => {
     const isTapped = tappedLetter.includes(letter);
@@ -62,7 +80,7 @@ function App() {
           <h2>You win!</h2>
           <p>Well done 🎉</p>
         </section>
-        <section className='languajes-container'>{languajesElements}</section>
+        <section className='languages-container'>{languagesElements}</section>
         <section className='letters-container'>{letterElement}</section>
         <section className='keyboard-container'>{keyboard}</section>
         <button className='new-game'>New Game</button>
