@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import Header from './components/Header';
 import '../src/languajes';
+import { getFarewellText } from '../src/utils';
 
 import './App.css';
 import { languages } from '../src/languajes';
+import Confetti from 'react-confetti';
 
 function App() {
   // States Values
   const [currentWord, setCurrentWord] = useState('react');
   const [tappedLetter, setTappedLetter] = useState([]);
-  console.log('Current word', currentWord);
-  console.log('Tapped letters', tappedLetter);
+
   // Static Values
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
   // Derived vales
   /* let counter = 0;
   tappedLetter.map((letter) => {
@@ -23,7 +25,10 @@ function App() {
   const wrongGuessCounter = tappedLetter.filter(
     (letter) => !currentWord.includes(letter)
   ).length;
-  console.log('Counter wrong letters', wrongGuessCounter);
+
+  const lastGuessedLetter = tappedLetter[tappedLetter.length - 1];
+  const isGuessedLetterCorrect =
+    lastGuessedLetter && !currentWord.includes(lastGuessedLetter);
 
   const letterElement = currentWord.split('').map((letter, index) => {
     return (
@@ -47,6 +52,13 @@ function App() {
     );
   });
 
+  const isGameWin = currentWord
+    .split('')
+    .every((letter) => tappedLetter.includes(letter));
+  const isGameLost = wrongGuessCounter >= languagesElements.length - 1;
+
+  const isGameOver = isGameLost || isGameWin;
+
   function keepLetter(letter) {
     setTappedLetter((prevArray) =>
       prevArray.includes(letter) ? prevArray : [...prevArray, letter]
@@ -60,6 +72,9 @@ function App() {
     if (isTapped) {
       buttonClass = isInWord ? 'letter-exist' : 'no-letter-exist';
     }
+    if (isGameOver) {
+      buttonClass = '';
+    }
 
     return (
       <button
@@ -71,19 +86,49 @@ function App() {
       </button>
     );
   });
+  const noGuessedLetter = !isGameOver && isGuessedLetterCorrect && (
+    <section className='status-container farewell'>
+      <p>{getFarewellText(languages[wrongGuessCounter - 1].name)}</p>
+    </section>
+  );
+  const youWinElement = isGameWin && (
+    <section className='status-container win'>
+      <h2>You win!</h2>
+      <p>Well Done 🎉</p>
+    </section>
+  );
+  const lostElement = isGameLost && (
+    <section className='status-container lost'>
+      <h2>Game Over!</h2>
+      <p>Better start learning assembly 💀</p>
+    </section>
+  );
+  const confettiElement = isGameWin && <Confetti />;
+
+  function resetGame() {
+    setTappedLetter([]);
+  }
 
   return (
     <>
       <main>
+        {confettiElement}
         <Header />
         <section className='status-container'>
-          <h2>You win!</h2>
-          <p>Well done 🎉</p>
+          {noGuessedLetter}
+          {youWinElement}
+          {lostElement}
         </section>
         <section className='languages-container'>{languagesElements}</section>
         <section className='letters-container'>{letterElement}</section>
         <section className='keyboard-container'>{keyboard}</section>
-        <button className='new-game'>New Game</button>
+        {isGameOver && (
+          <button
+            onClick={resetGame}
+            className='new-game'>
+            New Game
+          </button>
+        )}
       </main>
     </>
   );

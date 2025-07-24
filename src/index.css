@@ -38,17 +38,36 @@ header p {
   font-size: 0.9em;
   white-space: normal;
   overflow-wrap: break-word;
-
 }
 
 section.status-container {
-  max-width: 450px;
-  background-color: #10A95B;
-  color: #F9F4DA;
-  border-radius: 5px;
-  padding: 8px;
+  min-width: 90%;
+  min-height: 100px;
   margin: auto;
+  padding: 8px;
+  border-radius: 5px;
+  color: #F9F4DA;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+
+
+section.status-container .win {
+  background-color: #10A95B;
+}
+
+section.status-container .lost {
+  background-color: #EC5D49;
+}
+
+section.status-container .farewell {
+  background-color: #7A5EA7;
+  border: 1px dashed #323232;
+
+}
+
 
 section.status-container h2 {
   font-size: 1.5rem;
