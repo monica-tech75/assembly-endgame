@@ -3,7 +3,6 @@ import Header from './components/Header';
 import '../src/languajes';
 import { getFarewellText, randomWords } from '../src/utils';
 
-import './App.css';
 import { languages } from '../src/languajes';
 import Confetti from 'react-confetti';
 
