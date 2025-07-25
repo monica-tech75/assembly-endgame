@@ -115,9 +115,6 @@ section.letters-container {
   margin-bottom: 30px;
 }
 
-
-
-
 section.letters-container span {
   font-size: 1.5rem;
   background-color: #323232;
@@ -125,6 +122,10 @@ section.letters-container span {
   border-bottom: 2px solid #F9F4DA;
   width: 40px;
   height: 40px;
+}
+
+section.letters-container span.reveal-letters {
+  color: #EC5D49;
 }
 
 section.keyboard-container {
@@ -156,6 +157,13 @@ section.keyboard-container button.no-letter-exist {
   background-color: #EC5D49;
 }
 
+section.keyboard-container > button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+
 button.new-game {
   background-color: #11B5E5;
   border: 1px solid #D7D7D7;
@@ -165,4 +173,16 @@ button.new-game {
   font-weight: bold;
   cursor: pointer;
   margin-top: 30px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

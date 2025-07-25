@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Header from './components/Header';
 import '../src/languajes';
-import { getFarewellText } from '../src/utils';
+import { getFarewellText, randomWords } from '../src/utils';
 
 import './App.css';
 import { languages } from '../src/languajes';
@@ -9,19 +9,19 @@ import Confetti from 'react-confetti';
 
 function App() {
   // States Values
-  const [currentWord, setCurrentWord] = useState('react');
+  const [currentWord, setCurrentWord] = useState(() => randomWords());
   const [tappedLetter, setTappedLetter] = useState([]);
 
   // Static Values
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
-  // Derived vales
+  // Derived values
   /* let counter = 0;
   tappedLetter.map((letter) => {
     currentWord.includes(letter) ? counter : counter++;
   });
   console.log(counter); */
-
+  const numGessesLeft = languages.length - 1;
   const wrongGuessCounter = tappedLetter.filter(
     (letter) => !currentWord.includes(letter)
   ).length;
@@ -30,12 +30,22 @@ function App() {
   const isGuessedLetterCorrect =
     lastGuessedLetter && !currentWord.includes(lastGuessedLetter);
 
+  const isGameWin = currentWord
+    .split('')
+    .every((letter) => tappedLetter.includes(letter));
+  const isGameLost = wrongGuessCounter >= numGessesLeft;
+
+  const isGameOver = isGameLost || isGameWin;
+
   const letterElement = currentWord.split('').map((letter, index) => {
+    const revealAllLetters = isGameLost ? 'reveal-letters' : '';
     return (
       <span
-        className='letters'
+        className={`letters ${revealAllLetters}`}
         key={index}>
-        {tappedLetter.includes(letter) ? letter.toUpperCase() : ''}
+        {tappedLetter.includes(letter) || isGameLost
+          ? letter.toUpperCase()
+          : ''}
       </span>
     );
   });
@@ -51,13 +61,6 @@ function App() {
       </span>
     );
   });
-
-  const isGameWin = currentWord
-    .split('')
-    .every((letter) => tappedLetter.includes(letter));
-  const isGameLost = wrongGuessCounter >= languagesElements.length - 1;
-
-  const isGameOver = isGameLost || isGameWin;
 
   function keepLetter(letter) {
     setTappedLetter((prevArray) =>
@@ -81,7 +84,10 @@ function App() {
         className={buttonClass}
         value={letter}
         onClick={() => keepLetter(letter)}
-        key={letter}>
+        key={letter}
+        disabled={isGameOver || tappedLetter.includes(letter)}
+        aria-disabled={tappedLetter.includes(letter)}
+        aria-label={`letter ${letter}`}>
         {letter.toUpperCase()}
       </button>
     );
@@ -103,9 +109,15 @@ function App() {
       <p>Better start learning assembly 💀</p>
     </section>
   );
-  const confettiElement = isGameWin && <Confetti />;
+  const confettiElement = isGameWin && (
+    <Confetti
+      recycle={false}
+      numberOfPieces={1000}
+    />
+  );
 
   function resetGame() {
+    setCurrentWord(randomWords);
     setTappedLetter([]);
   }
 
@@ -114,13 +126,37 @@ function App() {
       <main>
         {confettiElement}
         <Header />
-        <section className='status-container'>
+        <section
+          className='status-container'
+          aria-live='polite'
+          role='status'>
           {noGuessedLetter}
           {youWinElement}
           {lostElement}
         </section>
         <section className='languages-container'>{languagesElements}</section>
         <section className='letters-container'>{letterElement}</section>
+        {/* Combined visually-hidden aria-live region for status updates */}
+        <section
+          className='sr-only'
+          aria-live='polite'
+          role='status'>
+          <p>
+            {currentWord.includes(lastGuessedLetter)
+              ? `Correct. The letter ${lastGuessedLetter} is in the word.`
+              : `Sorry. The letter  ${lastGuessedLetter} is not in the word.`}
+            You have {numGessesLeft} attemps left.
+          </p>
+          <p>
+            Curren word:{' '}
+            {currentWord
+              .split('')
+              .map((letter) =>
+                tappedLetter.includes(letter) ? letter + '.' : 'blanck.'
+              )
+              .join(' ')}
+          </p>
+        </section>
         <section className='keyboard-container'>{keyboard}</section>
         {isGameOver && (
           <button
